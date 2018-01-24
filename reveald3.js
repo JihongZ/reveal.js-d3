@@ -41,6 +41,52 @@ var Reveald3 = window.Reveald3 || (function(){
     // specific case where there is a D3 visualization on first slide
     Reveal.addEventListener('ready', function( event ) {
         handleSlideVisualizations(event)
+
+        // Get all figure containers
+        const allVizContainers = document.querySelector('div.slides').querySelectorAll('.fig-container');
+        for (let i = 0; i<allVizContainers.length; i++ ) {
+            
+            const url = allVizContainers[i].getAttribute('data-file')
+        
+            let xhr = new XMLHttpRequest()
+        
+            // see https://developer.mozilla.org/en-US/docs/Web/API/element.getAttribute#Notes
+            xhr.onreadystatechange = function() {
+                if( xhr.readyState === 4 ) {
+                // file protocol yields status code 0 (useful for local debug, mobile applications etc.)
+                if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
+                    
+                    console.log(xhr.status)
+                    // this_section.innerHTML = xhr.responseText;
+                }
+                else {
+                    console.log(xhr.status)
+                    
+                    console.log('<section data-state="alert">' +
+                    'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
+                    'Check your browser\'s JavaScript console for more details.' +
+                    '<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>' +
+                    '</section>');
+                    
+                }
+                } else {
+                    console.log(xhr)
+                }
+            };
+        
+            xhr.open( 'GET', url, true );
+
+            try {
+            xhr.send();
+        }
+        catch ( e ) {
+            alert( 'Failed to get the file ' + url + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
+        }
+
+
+            // console.log(`${file}`)
+        }
+
     });
 
     Reveal.addEventListener('slidechanged', function( event ) {

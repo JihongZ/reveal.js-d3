@@ -1,0 +1,4 @@
+List external js files in each html that will be used for fig
+and load those scripts (with src=) in cache so no flash when we
+arrive in slide with new library for first time (semiotic, vega-lite, etc ...)
+and that those files are a bit big.
